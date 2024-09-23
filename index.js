@@ -1,8 +1,9 @@
 const express = require("express");
 const multer = require("multer");
-
 const sharp = require("sharp");
+const cors = require("cors");
 const path = require("path");
+
 const fs = require("fs");
 
 const app = express();
@@ -14,7 +15,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // Limit file size to 10MB
 });
-
+app.use(cors());
 // Helper function to compress image to a specific size (in KB)
 async function compressImageToExactSize(buffer, targetSizeKB, width, height) {
   console.log(targetSizeKB, width, height);
