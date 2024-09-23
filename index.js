@@ -1,13 +1,13 @@
 const express = require("express");
 const multer = require("multer");
-const cors = require("cors");
+
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
 
 const app = express();
 const port = 3000;
-app.use(cors());
+
 // Set up multer for image uploads
 const storage = multer.memoryStorage();
 const upload = multer({
