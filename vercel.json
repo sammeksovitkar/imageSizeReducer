@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",  // Change this to the entry file of your application
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/upload",
+      "methods": ["POST"],
+      "dest": "/index.js" // Change this to the entry file of your application
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.js" // This handles all other requests
+    }
+  ]
+}
