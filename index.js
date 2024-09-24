@@ -50,39 +50,43 @@ app.get("/", (req, res) => {
 });
 
 app.post("/upload", upload.single("image"), async (req, res) => {
-  console.log(req.file,"file")
   try {
     if (!req.file) {
       return res.status(400).json({ error: "Please upload an image" });
     }
 
-    const width = parseInt(req.body.width) || 800;
-    const height = parseInt(req.body.height) || 600;
-    const targetSizeKB = parseInt(req.body.size);
+    // Get the width, height, and desired size from the request
+    const width = parseInt(req.body.width) || 800; // Default width
+    const height = parseInt(req.body.height) || 600; // Default height
+    const targetSizeKB = parseInt(req.body.size); // Desired size in KB (sent by the user)
 
     if (!targetSizeKB || targetSizeKB <= 0) {
-      return res.status(400).json({ error: "Please provide a valid size in KB" });
+      return res
+        .status(400)
+        .json({ error: "Please provide a valid size in KB" });
     }
 
-    const fileSizeInKB = req.file.size / 1024;
-    const resizedImage = await compressImageToExactSize(req.file.buffer, targetSizeKB, width, height);
+    // Compress the image to the target size
+    const resizedImage = await compressImageToExactSize(
+      req.file.buffer,
+      targetSizeKB,
+      width,
+      height
+    );
 
-    const resizedImageSizeInKB = Buffer.byteLength(resizedImage) / 1024;
+    // Set response headers to force download
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="resized-image.jpg"'
+    );
+    res.setHeader("Content-Type", "image/jpeg");
 
-    const outputPath = path.join(__dirname, "uploads", `resized-${Date.now()}.jpg`);
-    fs.writeFileSync(outputPath, resizedImage);
-
-    res.json({
-      message: "Image uploaded and resized successfully",
-      originalSize: `${fileSizeInKB.toFixed(2)} KB`,
-      resizedSize: `${resizedImageSizeInKB.toFixed(2)} KB`,
-      path: outputPath,
-    });
+    // Send the resized image back to the client as a download
+    res.send(resizedImage);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to process image" });
   }
 });
-
 // Export the app instead of calling app.listen
 module.exports = app;
