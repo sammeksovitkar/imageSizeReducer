@@ -8,13 +8,13 @@
   ],
   "routes": [
     {
-      "src": "/",
+      "src": "/api/upload",
       "methods": ["POST"],
-      "dest": "index.js"
+      "dest": "/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "/index.js"
     }
   ]
 }
