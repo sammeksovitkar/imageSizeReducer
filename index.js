@@ -50,6 +50,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/upload", upload.single("image"), async (req, res) => {
+  console.log(req.file,"file")
   try {
     if (!req.file) {
       return res.status(400).json({ error: "Please upload an image" });
